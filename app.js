@@ -1,0 +1,102 @@
+
+var express = require('express'), 
+    app = express(),
+    http = require('http'),
+    socketIo = require('socket.io');
+
+
+
+// start webserver on port 8080
+var server =  http.createServer(app);
+var io = socketIo.listen(server);
+var fs = require('fs');
+var clients = new Array();
+server.listen(8080);
+
+
+// add directory with our static files
+app.use(express.static(__dirname + '/'));
+console.log("Server running on 127.0.0.1:8080");
+
+app.get('/', function(req, res){
+    res.sendFile(__dirname + '/index.html');
+});
+
+
+// array of all lines drawn
+var line_history = [];
+
+// event-handler for new incoming connections
+
+
+// var io = require('socket.io')(3000);
+
+var image;
+
+io.on('connection', function (socket) {
+  socket.on('disconnect', function(){
+    console.log(clients);
+    var index = clients.indexOf(socket.id);
+    var topItem = clients.pop();
+    if(clients.length != index)
+      clients[index] = topItem;
+    // console.log(clients);
+  });
+
+  // fs.readFile('company.png', function(err, buf){
+  //   socket.emit('image', { image: true, buffer: buf.toString('base64') });
+  // });
+  
+  clients.push(socket.id);
+  console.log("USER CONNECTED");
+  if(clients.length > 1)
+  {
+   console.log("clients connected: "+clients.length);  
+   console.log(clients);
+     for(i=0; i<(clients.length); i++)
+     {
+      console.log("GET CANVAS FROM: " + clients[i]); 
+       
+       if(clients[i].id != socket.id)
+       {
+         //download canvas
+         io.to(clients[i]).emit('get_current_canvas');
+         
+         //receive canvas
+         socket.on('received_current_canvas', function(data){
+
+            
+
+           global.image = data;
+           
+           // if(global.image != null)
+           // {
+           //   console.log("canvas loaded");
+           //   // console.log(image);
+           // }  else { console.log("canvas NOT loaded"); }
+
+         });
+       } else {console.log("\n\nnothing hapens here\n\n")}
+
+       if(global.image != null)
+         {console.log(clients[i] + ": order: "+i);
+            console.log('image not null');
+            io.to(socket.id).emit('draw_current_canvas', {data:global.image});
+            global.image = null;
+
+            break;   
+         }
+       else console.log('image null');
+     }
+  }
+
+
+   // add handler for message type "draw_line".
+   socket.on('draw_line', function (data) {
+      // add received line to history 
+      line_history.push(data.line);
+      
+      // send line to all clients
+      io.emit('draw_line', { line: data.line });
+   });
+});
