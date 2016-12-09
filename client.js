@@ -5,6 +5,7 @@ document.addEventListener("DOMContentLoaded", function() {
       pos: {x:0, y:0},
       pos_prev: false
    };
+   
    // get canvas element and create context
    var canvas  = document.getElementById('drawing');
    var context = canvas.getContext('2d');
@@ -31,8 +32,8 @@ document.addEventListener("DOMContentLoaded", function() {
    };
       
    socket.on('start', function(data){
-      var elem = document.getElementById("socketName");
-      elem.innerHTML = data.socketid;
+      // var elem = document.getElementById("socketName");
+      // elem.innerHTML = data.socketid;
    });
 
    socket.on('get_current_canvas', function(data){
