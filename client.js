@@ -57,11 +57,29 @@ document.addEventListener("DOMContentLoaded", function() {
    
 
    // draw line received from server
-	socket.on('draw_line', function (data) {
+	socket.on('draw_line', function (data)) {
       var line = data.line;
       context.beginPath();
       context.moveTo(line[0].x * width, line[0].y * height);
       context.lineTo(line[1].x * width, line[1].y * height);
+      context.stroke();
+   });
+
+   socket.on('draw_rectangle', function (data)){
+      var x = data.x;
+      var y = data.y;
+      var width = data.width;
+      var height = data.height;
+      context.rect(x,y,width,height);
+      context.stroke();
+   });
+
+   socket.on('draw_circle', function(data)){
+      var x = data.x;
+      var y = data.y;
+      var r = data.r;
+      context.beginPath();
+      context.arc(x,y,r,0,2*Math.PI);
       context.stroke();
    });
 
@@ -78,6 +96,13 @@ document.addEventListener("DOMContentLoaded", function() {
       if (mouse.click && mouse.move && mouse.pos_prev) {
          // send line to to the server
          socket.emit('draw_line', { line: [ mouse.pos, mouse.pos_prev ] });
+
+
+         socket.emit('draw_circle', {x: mouse.pos_prev.x, y: mouse.pos_prev.y, r: Math.sqrt((mouse.pos.x-mouse.pos_prev.x)*(mouse.pos.x-mouse.pos_prev.x)+(mouse.pos.y-mouse.pos_prev.y)*(mouse.pos.y-mouse.pos_prev.y)) });
+
+
+         socket.emit('draw_rectangle', {x: mouse.pos_prev.x, y: mouse.pos_prev.y, width: Math.abs(mouse.pos.x-mouse.pos_prev.x), height: Math.abs(mouse.pos.y-mouse.pos_prev.y)})
+
          mouse.move = false;
       }
       mouse.pos_prev = {x: mouse.pos.x, y: mouse.pos.y};

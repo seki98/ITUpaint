@@ -75,7 +75,7 @@ io.on('connection', function (socket) {
            // }  else { console.log("canvas NOT loaded"); }
 
          });
-       } else {console.log("\n\nnothing hapens here\n\n")}
+       } else {console.log("\n\nnothing happens here\n\n")}
 
        if(global.image != null)
          {console.log(clients[i] + ": order: "+i);
