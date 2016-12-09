@@ -95,4 +95,11 @@ io.on('connection', function (socket) {
       io.emit('draw_line', { line: data.line, settings: data.settings });
       
    });
+
+   socket.on('send_image', function(data){
+      io.emit('open_image', {url:data.url})
+   });
+   
+
+   
 });

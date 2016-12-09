@@ -11,6 +11,10 @@ document.addEventListener("DOMContentLoaded", function() {
       color: "black",
       lineWidth: 10,
    }
+
+
+
+   
    
    
 
@@ -21,6 +25,24 @@ document.addEventListener("DOMContentLoaded", function() {
    var height  = window.innerHeight;
    var socket  = io.connect();
    var currCanvas;
+
+   var URL = window.URL || window.URL;
+   var input = document.getElementById('input');
+   input.addEventListener('change', handleFiles, false);
+   function handleFiles(e) {
+       // var context = document.getElementById('drawing').getContext('2d');
+       var url = URL.createObjectURL(e.target.files[0]);
+       socket.emit('send_image', {url: url});
+   }
+
+   socket.on('open_image', function(data){
+      var img = new Image();
+       img.onload = function() {
+           context.drawImage(img, 0, 0);    
+       }
+       img.src = data.url;
+   });
+
 
    $("#pencil").click(function(){
       settings.mode = "pencil";
@@ -44,6 +66,7 @@ document.addEventListener("DOMContentLoaded", function() {
    $("#colorpicker").change(function(){
       settings.color = $("#colorpicker").css("background-color");
    });
+
 
    
    
@@ -104,7 +127,7 @@ document.addEventListener("DOMContentLoaded", function() {
    
 
    // draw line received from server
-	socket.on('draw_line', function (data)) {
+	socket.on('draw_line', function (data) {
       var line = data.line;
       context.beginPath();
       context.moveTo(line[0].x * width, line[0].y * height);
@@ -115,7 +138,7 @@ document.addEventListener("DOMContentLoaded", function() {
       context.stroke();
    });
 
-   socket.on('draw_rectangle', function (data)){
+   socket.on('draw_rectangle', function (data){
       var x = data.x;
       var y = data.y;
       var width = data.width;
@@ -126,7 +149,7 @@ document.addEventListener("DOMContentLoaded", function() {
       context.stroke();
    });
 
-   socket.on('draw_circle', function(data)){
+   socket.on('draw_circle', function(data){
       var x = data.x;
       var y = data.y;
       var r = data.r;
@@ -149,7 +172,8 @@ document.addEventListener("DOMContentLoaded", function() {
       // check if the user is drawing
       if (mouse.click && mouse.move && mouse.pos_prev) {
          // send line to to the server
-         if(setting.mode == "pencil"){
+         if(settings.mode == "pencil"){
+
             socket.emit('draw_line', { line: [ mouse.pos, mouse.pos_prev ], settings: settings });
          }
          mouse.move = false;
