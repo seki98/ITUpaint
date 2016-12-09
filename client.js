@@ -13,6 +13,8 @@ document.addEventListener("DOMContentLoaded", function() {
    var socket  = io.connect();
    var currCanvas;
 
+   
+   
    // set canvas to full browser width/height
    canvas.width = width;
    canvas.height = height;
@@ -28,21 +30,30 @@ document.addEventListener("DOMContentLoaded", function() {
       mouse.move = true;
    };
       
-   socket.on('get_current_canvas', function(id){
+   socket.on('start', function(data){
+      var elem = document.getElementById("socketName");
+      elem.innerHTML = data.socketid;
+   });
+
+   socket.on('get_current_canvas', function(data){
       currCanvas = canvas.toDataURL('image/png');
+      setTimeout(function(){ ;}, 1000);
       socket.emit('received_current_canvas', currCanvas);
+      
+
+
+      // alert('get this canvas');
    });
 
    socket.on('draw_current_canvas', function(data){
-      var elem = document.getElementById("socketName");
-      elem.innerHTML = data.socket;
       // console.log(data.socket);
+      setTimeout(function(){ ;}, 1000);
+      // alert('write to this canvas');
       var image = new Image();
       image.src = data.data;
       context.drawImage(image, 0, 0);
    });
    
-
 
    // draw line received from server
 	socket.on('draw_line', function (data) {

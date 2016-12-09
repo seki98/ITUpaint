@@ -48,8 +48,10 @@ io.on('connection', function (socket) {
   // });
   
   clients.push(socket.id);
+  io.to(socket.id).emit('start',{socketid:socket.id});
+
   console.log("USER CONNECTED");
-  if(clients.length > 1)
+  if(clients.length > 0)
   {
    console.log("clients connected: "+clients.length);  
    console.log(clients);
@@ -64,8 +66,8 @@ io.on('connection', function (socket) {
          
          //receive canvas
          socket.on('received_current_canvas', function(data){
-
-            
+         setTimeout(function(){ ;}, 1000);
+         
 
            global.image = data;
            
@@ -95,7 +97,7 @@ io.on('connection', function (socket) {
    socket.on('draw_line', function (data) {
       // add received line to history 
       line_history.push(data.line);
-      
+      // socket.emit('started', {socket:socket});
       // send line to all clients
       io.emit('draw_line', { line: data.line });
    });
