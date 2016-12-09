@@ -92,6 +92,7 @@ io.on('connection', function (socket) {
 
    // add handler for message type "draw_line".
    socket.on('draw_line', function (data) {
-      io.emit('draw_line', { line: data.line });
+      io.emit('draw_line', { line: data.line, settings: data.settings });
+      
    });
 });

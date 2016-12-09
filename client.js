@@ -5,7 +5,14 @@ document.addEventListener("DOMContentLoaded", function() {
       pos: {x:0, y:0},
       pos_prev: false
    };
+
+   var settings = {
+      mode: "pencil",
+      color: "black",
+   }
    
+   
+
    // get canvas element and create context
    var canvas  = document.getElementById('drawing');
    var context = canvas.getContext('2d');
@@ -14,6 +21,30 @@ document.addEventListener("DOMContentLoaded", function() {
    var socket  = io.connect();
    var currCanvas;
 
+   $("#pencil").click(function(){
+      settings.mode = "pencil";
+      // alert(settings.mode);
+   });
+   $("#circle").click(function(){
+      settings.mode = "circle";
+      // alert(settings.mode);
+   });
+   $("#rectangle").click(function(){
+      settings.mode = "rectangle";
+      // alert(settings.mode);
+   });
+   $("#red").click(function(){
+      settings.color = "red";
+      // alert(settings.color);
+   });
+   $("#blue").click(function(){
+      settings.color = "blue";
+      // alert(settings.color);
+   });
+   $("#green").click(function(){
+      settings.color = "green";
+      // alert(settings.color);
+   });
    
    
    // set canvas to full browser width/height
@@ -62,6 +93,8 @@ document.addEventListener("DOMContentLoaded", function() {
       context.beginPath();
       context.moveTo(line[0].x * width, line[0].y * height);
       context.lineTo(line[1].x * width, line[1].y * height);
+      context.strokeStyle = data.settings.color;
+      
       context.stroke();
    });
 
@@ -77,7 +110,8 @@ document.addEventListener("DOMContentLoaded", function() {
       // check if the user is drawing
       if (mouse.click && mouse.move && mouse.pos_prev) {
          // send line to to the server
-         socket.emit('draw_line', { line: [ mouse.pos, mouse.pos_prev ] });
+
+         socket.emit('draw_line', { line: [ mouse.pos, mouse.pos_prev ], settings: settings });
          mouse.move = false;
       }
       mouse.pos_prev = {x: mouse.pos.x, y: mouse.pos.y};
