@@ -44,7 +44,9 @@ document.addEventListener("DOMContentLoaded", function() {
        img.src = data.url;
    });
 
-
+   $("#line").click(function(){
+      settings.mode = "line";
+   });
    $("#pencil").click(function(){
       settings.mode = "pencil";
    });
@@ -78,7 +80,7 @@ document.addEventListener("DOMContentLoaded", function() {
    // register mouse event handlers
    canvas.onmousedown = function(e){
 
-      if(settings.mode == "circle" || settings.mode == "rectangle"){
+      if(settings.mode == "circle" || settings.mode == "rectangle" || settings.mode == "line"){
          
          mouse.pos_prev = {x: mouse.pos.x, y: mouse.pos.y};
          //alert("pociatocny bod" + mouse.pos_prev.x);
@@ -89,24 +91,31 @@ document.addEventListener("DOMContentLoaded", function() {
    canvas.onmouseup = function(e){
 
       //alert("zaciatok" + mouse.pos_prev.x + "koniec" + mouse.pos.x);
+
+      var prevX = mouse.pos_prev.x * canvas.width;
+      var prevY = mouse.pos_prev.y * canvas.height;
+      var currX = mouse.pos.x * canvas.width;
+      var currY = mouse.pos.y * canvas.height;
        if(settings.mode == "circle"){
-         //alert("zaciatok" + mouse.pos_prev.x + "koniec" + mouse.pos.x);
-         var middleX = mouse.pos_prev.x * canvas.width;
-         var middleY = mouse.pos_prev.y * canvas.height;
-         var currX = mouse.pos.x * canvas.width;
-         var currY = mouse.pos.y * canvas.height;
-         var iks = Math.abs(currX - middleX);
+         //alert("zaciatok" + mouse.pos_prev.x + "koniec" + mouse.pos.x);        
+         var iks = Math.abs(currX - prevX);
          //alert("iks" + iks);
-         var ypsilon = Math.abs(currY - middleY);
+         var ypsilon = Math.abs(currY - prevY);
          var radX = iks*iks;
          var radY = ypsilon*ypsilon;
          var radius = Math.sqrt(radX + radY);
          //alert("predchadzajuca" + mouse.pos_prev.x + "nasledujuca" + mouse.pos.x);
-         socket.emit('draw_circle', {x: middleX, y: middleY, r: radius, settings: settings });
+         socket.emit('draw_circle', {x: prevX, y: prevY, r: radius, settings: settings });
         // alert("konec circle");
       }
        if(settings.mode == "rectangle"){
-         socket.emit('draw_rectangle', {x: mouse.pos_prev.x, y: mouse.pos_prev.y, width: Math.abs(mouse.pos.x-mouse.pos_prev.x), height: Math.abs(mouse.pos.y-mouse.pos_prev.y), settings: settings});
+         var rectWidth = Math.abs(currX - prevX);
+         var rectHeight = Math.abs(currY - prevY);
+         socket.emit('draw_rectangle', {x: prevX, y: prevY, width: rectWidth, height: rectHeight, settings: settings});
+      }
+
+      if(settings.mode == "line"){
+         socket.emit('draw_straightLine', {x1: prevX, y1: prevY, x2: currX, y2: currY, settings: settings});
       }
       mouse.click = false;
    };
@@ -182,7 +191,20 @@ document.addEventListener("DOMContentLoaded", function() {
       context.beginPath();
       context.arc(x,y,r,0,2*Math.PI);
       //context.arc(500,500,100,0,2*Math.PI);
+      context.strokeStyle = data.settings.color;
+      context.lineWidth = data.settings.lineWidth;
+      context.stroke();
+   });
 
+
+   socket.on('draw_straightLine', function(data){
+      var prevX = data.x1;
+      var prevY = data.y1;
+      var currX = data.x2;
+      var currY = data.y2;
+      context.beginPath();
+      context.moveTo(prevX,prevY);
+      context.lineTo(currX,currY);
       context.strokeStyle = data.settings.color;
       context.lineWidth = data.settings.lineWidth;
       context.stroke();

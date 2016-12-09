@@ -103,10 +103,15 @@ io.on('connection', function (socket) {
       io.emit('draw_rectangle', { x: data.x, y: data.y, width: data.width, height: data.height, settings: data.settings })
    });
 
+   socket.on('draw_straightLine', function(data){
+   io.emit('draw_straightLine', { x1: data.x1, y1: data.y1, x2: data.x2, y2: data.y2, settings: settings})
+   });
+
    socket.on('send_image', function(data){
       io.emit('open_image', {url:data.url})
    });
-   
+
+
 
    
 });
