@@ -23,28 +23,19 @@ document.addEventListener("DOMContentLoaded", function() {
 
    $("#pencil").click(function(){
       settings.mode = "pencil";
-      // alert(settings.mode);
    });
    $("#circle").click(function(){
       settings.mode = "circle";
-      // alert(settings.mode);
    });
    $("#rectangle").click(function(){
       settings.mode = "rectangle";
-      // alert(settings.mode);
    });
-   $("#red").click(function(){
-      settings.color = "red";
-      // alert(settings.color);
+
+   $("#colorpicker").change(function(){
+      settings.color = $("#colorpicker").css("background-color");
+      console.log(settings.color);
    });
-   $("#blue").click(function(){
-      settings.color = "blue";
-      // alert(settings.color);
-   });
-   $("#green").click(function(){
-      settings.color = "green";
-      // alert(settings.color);
-   });
+
    
    
    // set canvas to full browser width/height
