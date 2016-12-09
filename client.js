@@ -9,6 +9,7 @@ document.addEventListener("DOMContentLoaded", function() {
    var settings = {
       mode: "pencil",
       color: "black",
+      lineWidth: 10,
    }
    
    
@@ -30,10 +31,18 @@ document.addEventListener("DOMContentLoaded", function() {
    $("#rectangle").click(function(){
       settings.mode = "rectangle";
    });
+   $("#width1").click(function(){
+      settings.lineWidth = 10;
+   });
+   $("#width2").click(function(){
+      settings.lineWidth = 20;
+   });
+   $("#width3").click(function(){
+      settings.lineWidth = 30;
+   });
 
    $("#colorpicker").change(function(){
       settings.color = $("#colorpicker").css("background-color");
-      console.log(settings.color);
    });
 
    
@@ -85,6 +94,7 @@ document.addEventListener("DOMContentLoaded", function() {
       context.moveTo(line[0].x * width, line[0].y * height);
       context.lineTo(line[1].x * width, line[1].y * height);
       context.strokeStyle = data.settings.color;
+      context.lineWidth=data.settings.lineWidth;
       
       context.stroke();
    });
