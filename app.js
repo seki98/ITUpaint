@@ -93,7 +93,14 @@ io.on('connection', function (socket) {
    // add handler for message type "draw_line".
    socket.on('draw_line', function (data) {
       io.emit('draw_line', { line: data.line, settings: data.settings });
-      
+   });
+
+   socket.on('draw_circle', function(data){
+      io.emit('draw_circle', { x: data.x, y: data.y, r: data.r, settings: data.settings })
+   });
+
+   socket.on('draw_rectangle', function(data){
+      io.emit('draw_rectangle', { x: data.x, y: data.y, width: data.width, height: data.height, settings: data.settings })
    });
 
    socket.on('send_image', function(data){
