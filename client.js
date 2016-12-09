@@ -11,8 +11,9 @@ document.addEventListener("DOMContentLoaded", function() {
       color: "black",
       lineWidth: 10,
    }
-
-
+   var offset =$("#topbar").css("height");
+   offset = offset.slice(0, -2);
+   
 
    
    
@@ -78,6 +79,7 @@ document.addEventListener("DOMContentLoaded", function() {
    canvas.onmousedown = function(e){
       mouse.pos_prev = {x: mouse.pos.x, y: mouse.pos.y};
       mouse.click = true;
+
    };
    canvas.onmouseup = function(e){
 
@@ -94,9 +96,11 @@ document.addEventListener("DOMContentLoaded", function() {
 
    canvas.onmousemove = function(e) {
       // normalize mouse position to range 0.0 - 1.0
-      
+         // alert(e.clientY + " " + offset);
+         console.log(e.clientY);
+         console.log(offset);
          mouse.pos.x = e.clientX / width;
-         mouse.pos.y = e.clientY / height;
+         mouse.pos.y = (e.clientY - offset) / height;
          mouse.move = true;
       
    };
@@ -180,7 +184,7 @@ document.addEventListener("DOMContentLoaded", function() {
          mouse.move = false;
       }
        mouse.pos_prev = {x: mouse.pos.x, y: mouse.pos.y};
-       setTimeout(mainLoop, 25);
+       setTimeout(mainLoop, 5);
    }
   
    mainLoop();
