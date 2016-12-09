@@ -104,7 +104,7 @@ io.on('connection', function (socket) {
    });
 
    socket.on('draw_straightLine', function(data){
-   io.emit('draw_straightLine', { x1: data.x1, y1: data.y1, x2: data.x2, y2: data.y2, settings: settings})
+   io.emit('draw_straightLine', { x1: data.x1, y1: data.y1, x2: data.x2, y2: data.y2, settings: data.settings})
    });
 
    socket.on('send_image', function(data){

@@ -9,3 +9,8 @@ body, html{
 #canvas {
    display: block;
 }
+
+#drawing{
+	   cursor: crosshair;
+
+}
