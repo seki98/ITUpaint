@@ -104,18 +104,17 @@ document.addEventListener("DOMContentLoaded", function() {
    
 
    // draw line received from server
-	socket.on('draw_line', function (data)) {
+	socket.on('draw_line', function (data){
       var line = data.line;
       context.beginPath();
       context.moveTo(line[0].x * width, line[0].y * height);
       context.lineTo(line[1].x * width, line[1].y * height);
       context.strokeStyle = data.settings.color;
-      context.lineWidth=data.settings.lineWidth;
-      
+      context.lineWidth = data.settings.lineWidth;
       context.stroke();
    });
 
-   socket.on('draw_rectangle', function (data)){
+   socket.on('draw_rectangle', function (data){
       var x = data.x;
       var y = data.y;
       var width = data.width;
@@ -126,7 +125,7 @@ document.addEventListener("DOMContentLoaded", function() {
       context.stroke();
    });
 
-   socket.on('draw_circle', function(data)){
+   socket.on('draw_circle', function(data){
       var x = data.x;
       var y = data.y;
       var r = data.r;
@@ -146,16 +145,18 @@ document.addEventListener("DOMContentLoaded", function() {
    
    // main loop, running every 25ms
    function mainLoop() {
+      
       // check if the user is drawing
       if (mouse.click && mouse.move && mouse.pos_prev) {
          // send line to to the server
-         if(setting.mode == "pencil"){
+         if(settings.mode == "pencil"){
             socket.emit('draw_line', { line: [ mouse.pos, mouse.pos_prev ], settings: settings });
          }
          mouse.move = false;
-         mouse.pos_prev = {x: mouse.pos.x, y: mouse.pos.y};
-         setTimeout(mainLoop, 25);
       }
+       mouse.pos_prev = {x: mouse.pos.x, y: mouse.pos.y};
+       setTimeout(mainLoop, 25);
    }
+  
    mainLoop();
 });
