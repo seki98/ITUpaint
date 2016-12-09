@@ -52,14 +52,30 @@ document.addEventListener("DOMContentLoaded", function() {
    canvas.height = height;
 
    // register mouse event handlers
-   canvas.onmousedown = function(e){ mouse.click = true; };
-   canvas.onmouseup = function(e){ mouse.click = false; };
+   canvas.onmousedown = function(e){
+      mouse.pos_prev = {x: mouse.pos.x, y: mouse.pos.y};
+      mouse.click = true;
+   };
+   canvas.onmouseup = function(e){
+
+       if(settings.mode == "circle"){
+         socket.emit('draw_circle', {x: mouse.pos_prev.x, y: mouse.pos_prev.y, r: Math.sqrt((mouse.pos.x-mouse.pos_prev.x)*(mouse.pos.x-mouse.pos_prev.x)+(mouse.pos.y-mouse.pos_prev.y)*(mouse.pos.y-mouse.pos_prev.y)), settings: settings });
+      }
+       if(settings.mode == "rectangle"){
+         socket.emit('draw_rectangle', {x: mouse.pos_prev.x, y: mouse.pos_prev.y, width: Math.abs(mouse.pos.x-mouse.pos_prev.x), height: Math.abs(mouse.pos.y-mouse.pos_prev.y), settings: settings});
+      }
+      mouse.click = false;
+   };
+
+
 
    canvas.onmousemove = function(e) {
       // normalize mouse position to range 0.0 - 1.0
-      mouse.pos.x = e.clientX / width;
-      mouse.pos.y = e.clientY / height;
-      mouse.move = true;
+      
+         mouse.pos.x = e.clientX / width;
+         mouse.pos.y = e.clientY / height;
+         mouse.move = true;
+      
    };
       
    socket.on('start', function(data){
@@ -104,6 +120,8 @@ document.addEventListener("DOMContentLoaded", function() {
       var width = data.width;
       var height = data.height;
       context.rect(x,y,width,height);
+      context.strokeStyle = data.settings.color;
+      context.lineWidth = data.settings.lineWidth;
       context.stroke();
    });
 
@@ -113,6 +131,8 @@ document.addEventListener("DOMContentLoaded", function() {
       var r = data.r;
       context.beginPath();
       context.arc(x,y,r,0,2*Math.PI);
+      context.strokeStyle = data.settings.color;
+      context.lineWidth = data.settings.lineWidth;
       context.stroke();
    });
 
@@ -128,20 +148,13 @@ document.addEventListener("DOMContentLoaded", function() {
       // check if the user is drawing
       if (mouse.click && mouse.move && mouse.pos_prev) {
          // send line to to the server
-
-
-         socket.emit('draw_circle', {x: mouse.pos_prev.x, y: mouse.pos_prev.y, r: Math.sqrt((mouse.pos.x-mouse.pos_prev.x)*(mouse.pos.x-mouse.pos_prev.x)+(mouse.pos.y-mouse.pos_prev.y)*(mouse.pos.y-mouse.pos_prev.y)) });
-
-
-         socket.emit('draw_rectangle', {x: mouse.pos_prev.x, y: mouse.pos_prev.y, width: Math.abs(mouse.pos.x-mouse.pos_prev.x), height: Math.abs(mouse.pos.y-mouse.pos_prev.y)})
-
-
-
-         socket.emit('draw_line', { line: [ mouse.pos, mouse.pos_prev ], settings: settings });
+         if(setting.mode == "pencil"){
+            socket.emit('draw_line', { line: [ mouse.pos, mouse.pos_prev ], settings: settings });
+         }
          mouse.move = false;
+         mouse.pos_prev = {x: mouse.pos.x, y: mouse.pos.y};
+         setTimeout(mainLoop, 25);
       }
-      mouse.pos_prev = {x: mouse.pos.x, y: mouse.pos.y};
-      setTimeout(mainLoop, 25);
    }
    mainLoop();
 });
