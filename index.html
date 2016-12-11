@@ -19,26 +19,37 @@
    <body>
    <div class="container" id="topbar">
       <ul class="nav nav-pills" role="tablist" id="settings">
-      <li ><a href="#" id="pencil">Pencil</a></li>
-      <li ><a href="#" id="rectangle">Rectangle</a></li>
-      <li ><a href="#" id="circle">Circle</a></li>
-      <li ><a href="#" id="line">Line</a></li>
+      <li ><a href="#" id="pencil"><b>P</b>encil</a></li>
+      <li ><a href="#" id="rectangle"><b>R</b>ectangle</a></li>
+      <li ><a href="#" id="circle"><b>C</b>ircle</a></li>
+      <li ><a href="#" id="line"><b>L</b>ine</a></li>
       <li>
-         <select>Width
-            <option>30</option>
-            <option>20</option>
-            <option>10</option>
-         </select>
+         <a href="#">
+            <label for="selectWidth"><b>W</b>idth = </label>
+            <select id="selectWidth">
+            <option data-value="45">45</option>
+               <option data-value="40">40</option>
+               <option data-value="35">35</option>
+               <option data-value="30">30</option>
+               <option data-value="25">25</option>
+               <option data-value="20">20</option>
+               <option data-value="15">15</option>
+               <option data-value="10" selected>10</option>
+               <option data-value="5">5</option>
+               <option data-value="3">3</option>
+               <option data-value="2">2</option>
+               <option data-value="1">1</option>
+            </select>
+         </a>
       </li>
-     <li><a href="#" id="width1">Bold</a></li>
-     <li><a href="#" id="width2">Medium</a></li>
-     <li><a href="#" id="width3">Thin</a></li>
-      <li><a href="#">Color: <input class="jscolor" id="colorpicker" value="000"></a></li>
-      <li><a href="#"><input type="file" id="input"/>File</a></li>
+      <li><a href="#"><b>Color</b> = <input class="jscolor" id="colorpicker" value="000"></a></li>
+      <li id="liImage"><a href="#"><input class="inputfile" type="file" id="input"/><label for="input">Choose an image</label></a></li>
    </ul>
    </div>
       <canvas id="drawing"></canvas>
-   
+      <div class="user">
+         <p id="userName"></p>
+      </div>
    <!-- <h1 id="socketName"></h1> -->
       
    </body>

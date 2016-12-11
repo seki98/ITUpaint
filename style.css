@@ -2,15 +2,61 @@
    margin: 0;
    padding: 0;
 }
+#settings{
+	margin-top:20px;
+}
 body, html{
    width: 100%;
    height: 100%;
 }
-#canvas {
-   display: block;
+
+b{
+	font-size:18px;
 }
 
-#drawing{
-	   cursor: crosshair;
+#drawing {
+   border-bottom:2px solid grey;
+   border-top:2px solid grey;
 
+	   cursor: crosshair;
+}
+.inputfile {
+	width: 0.1px;
+	height: 0.1px;
+	opacity: 0;
+	overflow: hidden;
+	position: absolute;
+	z-index: -1;
+}
+
+.inputfile + label {
+	border-radius:5px;
+	margin-top: -10px;
+	padding: 5px;
+    font-size: 1.25em;
+    font-weight: 700;
+    color: white;
+    background-color: #337ab7;
+    display: inline-block;
+	cursor: pointer; /* "hand" cursor */
+	transition: color 500ms, background-color 500ms;
+	-webkit-transition: color 500ms, background-color 500ms;
+}
+.inputfile:parrent{background:white;}
+.inputfile:focus + label,
+.inputfile + label:hover {
+    background-color: white;
+    color:black;
+}
+
+#liImage>a:hover{
+	background:white;
+}
+.user{
+	width:200px;
+	height:20px;
+	color:white;
+	position:absolute;
+	opacity:0.5;
+	background:black;
 }

@@ -23,9 +23,10 @@ document.addEventListener("DOMContentLoaded", function() {
    var canvas  = document.getElementById('drawing');
    var context = canvas.getContext('2d');
    var width   = window.innerWidth;
-   var height  = window.innerHeight;
+   var height  = window.innerHeight - offset*1.5;
    var socket  = io.connect();
    var currCanvas;
+   var draw = 0;
 
    var URL = window.URL || window.URL;
    var input = document.getElementById('input');
@@ -44,6 +45,23 @@ document.addEventListener("DOMContentLoaded", function() {
        img.src = data.url;
    });
 
+ $(document).keypress(function (e) {
+    if (e.which == 112) {
+        settings.mode = "pencil";
+    } 
+    if(e.which == 114)
+      settings.mode = "rectangle";
+   if(e.which == 99)
+      settings.mode = "circle";
+   if(e.which == 108)
+      settings.mode = "line";
+   if(e.which == 111)
+      $("#colorpicker").trigger("click");
+   if(e.which == 119)
+      $("#selectWidth").trigger("click");
+    // alert(e.which);
+});
+
    $("#line").click(function(){
       settings.mode = "line";
    });
@@ -56,14 +74,10 @@ document.addEventListener("DOMContentLoaded", function() {
    $("#rectangle").click(function(){
       settings.mode = "rectangle";
    });
-   $("#width1").click(function(){
-      settings.lineWidth = 10;
-   });
-   $("#width2").click(function(){
-      settings.lineWidth = 20;
-   });
-   $("#width3").click(function(){
-      settings.lineWidth = 30;
+
+   $("#selectWidth").change(function(){
+      width = $(this).children(':selected').data('value');
+      settings.lineWidth = width;
    });
 
    $("#colorpicker").change(function(){
@@ -124,11 +138,12 @@ document.addEventListener("DOMContentLoaded", function() {
 
    canvas.onmousemove = function(e) {
       // normalize mouse position to range 0.0 - 1.0
-         // alert(e.clientY + " " + offset);
-         console.log(e.clientY);
-         console.log(offset);
+         $(".user").css("top",e.clientY);
+         $(".user").css("left",e.clientX+15);
+
          mouse.pos.x = e.clientX / width;
          mouse.pos.y = (e.clientY - offset) / height;
+
          mouse.move = true;
       
    };
@@ -150,11 +165,13 @@ document.addEventListener("DOMContentLoaded", function() {
 
    socket.on('draw_current_canvas', function(data){
       // console.log(data.socket);
-      setTimeout(function(){ ;}, 1000);
+      
       // alert('write to this canvas');
       var image = new Image();
       image.src = data.data;
+
       context.drawImage(image, 0, 0);
+      document.getElementById("userName").innerHTML = socket.id;
    });
    
 
@@ -175,6 +192,7 @@ document.addEventListener("DOMContentLoaded", function() {
       var y = data.y;
       var width = data.width;
       var height = data.height;
+      context.beginPath();
       context.rect(x,y,width,height);
       context.strokeStyle = data.settings.color;
       context.lineWidth = data.settings.lineWidth;
