@@ -35,7 +35,8 @@ document.addEventListener("DOMContentLoaded", function() {
    socket.on('open_image', function(data){
       var img = new Image();
        img.onload = function() {
-           context.drawImage(img, 0, 0);    
+           context.drawImage(img, 0, 0, img.width,    img.height,     // source rectangle
+                   0, 0, canvas.width, canvas.height)    
        }
        img.src = data.url;
    });
@@ -164,6 +165,7 @@ document.addEventListener("DOMContentLoaded", function() {
       // console.log(data.socket);
       var image = new Image();
       image.src = data.data;
+
 
       context.drawImage(image, 0, 0);
       // document.getElementById("userName").innerHTML = socket.id;
