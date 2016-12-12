@@ -83,6 +83,10 @@ document.addEventListener("DOMContentLoaded", function() {
    $("#clear").click(function(){
       socket.emit('clear');
    });
+
+   $("#save").click(function(){
+      save();
+   });
    
    // set canvas to full browser width/height
    canvas.width = width;
@@ -222,6 +226,18 @@ document.addEventListener("DOMContentLoaded", function() {
          context.clearRect(0, 0, width, height);
   });
 
+
+  function save(){
+   //var canElem = document.getElementById("drawing");
+   var imgURL = canvas.toDataURL("image/png");
+   var dlLink = document.createElement('a');
+   dlLink.download = 'image.png';
+   dlLink.href = imgURL;
+   dlLink.dataset.downloadurl = ["image/png", dlLink.download, dlLink.href].join(':');
+   document.body.appendChild(dlLink);
+   dlLink.click();
+   document.body.removeChild(dlLink);
+  }
    
    // main loop, running every 25ms
    function mainLoop() {
