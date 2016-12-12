@@ -96,22 +96,23 @@ io.on('connection', function (socket) {
    });
 
    socket.on('draw_circle', function(data){
-      io.emit('draw_circle', { x: data.x, y: data.y, r: data.r, settings: data.settings })
+      io.emit('draw_circle', { x: data.x, y: data.y, r: data.r, settings: data.settings });
    });
 
    socket.on('draw_rectangle', function(data){
-      io.emit('draw_rectangle', { x: data.x, y: data.y, width: data.width, height: data.height, settings: data.settings })
+      io.emit('draw_rectangle', { x: data.x, y: data.y, width: data.width, height: data.height, settings: data.settings });
    });
 
    socket.on('draw_straightLine', function(data){
-   io.emit('draw_straightLine', { x1: data.x1, y1: data.y1, x2: data.x2, y2: data.y2, settings: data.settings})
+   io.emit('draw_straightLine', { x1: data.x1, y1: data.y1, x2: data.x2, y2: data.y2, settings: data.settings});
    });
 
    socket.on('send_image', function(data){
-      io.emit('open_image', {url:data.url})
+      io.emit('open_image', {url:data.url});
    });
 
-
-
+   socket.on('erase', function(data){
+      io.emit('erase');
+   });
    
 });

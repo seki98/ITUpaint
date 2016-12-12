@@ -13,11 +13,6 @@ document.addEventListener("DOMContentLoaded", function() {
    }
    var offset =$("#topbar").css("height");
    offset = offset.slice(0, -2);
-   
-
-   
-   
-   
 
    // get canvas element and create context
    var canvas  = document.getElementById('drawing');
@@ -53,13 +48,17 @@ document.addEventListener("DOMContentLoaded", function() {
       settings.mode = "rectangle";
    if(e.which == 99)
       settings.mode = "circle";
+   if(e.which == 101)
+      $("#erase").trigger("click");
    if(e.which == 108)
       settings.mode = "line";
    if(e.which == 111)
       $("#colorpicker").trigger("click");
+   if(e.which == 115)
+      $("#save").trigger("click");
    if(e.which == 119)
       $("#selectWidth").trigger("click");
-    // alert(e.which);
+     //alert(e.which);
 });
 
    $("#line").click(function(){
@@ -78,7 +77,6 @@ document.addEventListener("DOMContentLoaded", function() {
       settings.mode = "rectangle";
    });
 
-
    $("#selectWidth").change(function(){
       lineWidth = $(this).children(':selected').data('value');
       settings.lineWidth = lineWidth;
@@ -88,8 +86,13 @@ document.addEventListener("DOMContentLoaded", function() {
       settings.color = $("#colorpicker").css("background-color");
    });
 
+   $("#erase").click(function(){
+      socket.emit('erase');
+   });
 
-   
+   $("#save").click(function(){
+      save();
+   });
    
    // set canvas to full browser width/height
    canvas.width = width;
@@ -101,30 +104,23 @@ document.addEventListener("DOMContentLoaded", function() {
       if(settings.mode == "circle" || settings.mode == "rectangle" || settings.mode == "line"){
          
          mouse.pos_prev = {x: mouse.pos.x, y: mouse.pos.y};
-         //alert("pociatocny bod" + mouse.pos_prev.x);
       }
       mouse.click = true;
 
    };
    canvas.onmouseup = function(e){
 
-      //alert("zaciatok" + mouse.pos_prev.x + "koniec" + mouse.pos.x);
-
       var prevX = mouse.pos_prev.x * canvas.width;
       var prevY = mouse.pos_prev.y * canvas.height;
       var currX = mouse.pos.x * canvas.width;
       var currY = mouse.pos.y * canvas.height;
        if(settings.mode == "circle"){
-         //alert("zaciatok" + mouse.pos_prev.x + "koniec" + mouse.pos.x);        
          var iks = Math.abs(currX - prevX);
-         //alert("iks" + iks);
          var ypsilon = Math.abs(currY - prevY);
          var radX = iks*iks;
          var radY = ypsilon*ypsilon;
          var radius = Math.sqrt(radX + radY);
-         //alert("predchadzajuca" + mouse.pos_prev.x + "nasledujuca" + mouse.pos.x);
          socket.emit('draw_circle', {x: prevX, y: prevY, r: radius, settings: settings });
-        // alert("konec circle");
       }
        if(settings.mode == "rectangle"){
          console.log('r');
@@ -162,16 +158,10 @@ document.addEventListener("DOMContentLoaded", function() {
       currCanvas = canvas.toDataURL('image/png');
       setTimeout(function(){ ;}, 1000);
       socket.emit('received_current_canvas', currCanvas);
-      
-
-
-      // alert('get this canvas');
    });
 
    socket.on('draw_current_canvas', function(data){
       // console.log(data.socket);
-      
-      // alert('write to this canvas');
       var image = new Image();
       image.src = data.data;
 
@@ -207,15 +197,11 @@ document.addEventListener("DOMContentLoaded", function() {
    });
 
    socket.on('draw_circle', function(data){
-      
       var x = data.x;
       var y = data.y;
-      var r = data.r;
-     // alert("draw circle x y r" + x + y + r);
-      
+      var r = data.r;      
       context.beginPath();
       context.arc(x,y,r,0,2*Math.PI);
-      //context.arc(500,500,100,0,2*Math.PI);
       context.strokeStyle = data.settings.color;
       context.lineWidth = data.settings.lineWidth;
       context.stroke();
@@ -241,6 +227,23 @@ document.addEventListener("DOMContentLoaded", function() {
     context.drawImage(img, 0, 0);
   });
 
+
+  socket.on('erase', function(data){
+         context.clearRect(0, 0, width, height);
+  });
+
+
+  function save(){
+   //var canElem = document.getElementById("drawing");
+   var imgURL = canvas.toDataURL("image/png");
+   var dlLink = document.createElement('a');
+   dlLink.download = 'image.png';
+   dlLink.href = imgURL;
+   dlLink.dataset.downloadurl = ["image/png", dlLink.download, dlLink.href].join(':');
+   document.body.appendChild(dlLink);
+   dlLink.click();
+   document.body.removeChild(dlLink);
+  }
    
    // main loop, running every 25ms
    function mainLoop() {
