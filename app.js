@@ -111,8 +111,8 @@ io.on('connection', function (socket) {
       io.emit('open_image', {url:data.url});
    });
 
-   socket.on('clear', function(data){
-      io.emit('clear');
+   socket.on('erase', function(data){
+      io.emit('erase');
    });
    
 });

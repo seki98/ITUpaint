@@ -48,6 +48,8 @@ document.addEventListener("DOMContentLoaded", function() {
       settings.mode = "rectangle";
    if(e.which == 99)
       settings.mode = "circle";
+   if(e.which == 101)
+      $("#erase").trigger("click");
    if(e.which == 108)
       settings.mode = "line";
    if(e.which == 111)
@@ -56,7 +58,7 @@ document.addEventListener("DOMContentLoaded", function() {
       $("#save").trigger("click");
    if(e.which == 119)
       $("#selectWidth").trigger("click");
-    // alert(e.which);
+     //alert(e.which);
 });
 
    $("#line").click(function(){
@@ -72,7 +74,6 @@ document.addEventListener("DOMContentLoaded", function() {
       settings.mode = "rectangle";
    });
 
-
    $("#selectWidth").change(function(){
       lineWidth = $(this).children(':selected').data('value');
       settings.lineWidth = lineWidth;
@@ -82,8 +83,8 @@ document.addEventListener("DOMContentLoaded", function() {
       settings.color = $("#colorpicker").css("background-color");
    });
 
-   $("#clear").click(function(){
-      socket.emit('clear');
+   $("#erase").click(function(){
+      socket.emit('erase');
    });
 
    $("#save").click(function(){
@@ -224,7 +225,7 @@ document.addEventListener("DOMContentLoaded", function() {
   });
 
 
-  socket.on('clear', function(data){
+  socket.on('erase', function(data){
          context.clearRect(0, 0, width, height);
   });
 
