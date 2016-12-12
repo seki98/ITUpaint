@@ -17,11 +17,12 @@ document.addEventListener("DOMContentLoaded", function() {
    // get canvas element and create context
    var canvas  = document.getElementById('drawing');
    var context = canvas.getContext('2d');
-   var width   = window.innerWidth;
-   var height  = window.innerHeight - offset*1.5;
+   var width   = window.innerWidth- offset*2;
+   var height  = window.innerHeight - offset*1.1;
    var socket  = io.connect();
    var currCanvas;
    var draw = 0;
+   $("#drawing").css("margin-left",offset/1);
 
    var URL = window.URL || window.URL;
    var input = document.getElementById('input');
@@ -143,7 +144,7 @@ document.addEventListener("DOMContentLoaded", function() {
          $(".user").css("top",e.clientY);
          $(".user").css("left",e.clientX+15);
 
-         mouse.pos.x = e.clientX / width;
+         mouse.pos.x = (e.clientX - offset) / width;
          mouse.pos.y = (e.clientY - offset) / height;
 
          mouse.move = true;
@@ -168,7 +169,7 @@ document.addEventListener("DOMContentLoaded", function() {
 
 
       context.drawImage(image, 0, 0);
-      // document.getElementById("userName").innerHTML = socket.id;
+      document.getElementById("userName").innerHTML = socket.id;
    });
    
 

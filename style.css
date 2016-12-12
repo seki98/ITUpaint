@@ -3,7 +3,7 @@
    padding: 0;
 }
 #settings{
-	margin-top:20px;
+	margin-top:10px;
 }
 body, html{
    width: 100%;
@@ -15,8 +15,8 @@ b{
 }
 
 #drawing {
-   border-bottom:2px solid grey;
-   border-top:2px solid grey;
+   /*border-bottom:2px solid grey;*/
+   border:2px solid grey;
 	z-index:10;
 	   cursor: crosshair;
 }
@@ -79,6 +79,7 @@ b{
 	opacity:0;
 }
 .user{
+	
 	width:200px;
 	height:20px;
 	color:white;
