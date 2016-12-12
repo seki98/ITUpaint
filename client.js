@@ -75,9 +75,10 @@ document.addEventListener("DOMContentLoaded", function() {
       settings.mode = "rectangle";
    });
 
+
    $("#selectWidth").change(function(){
-      width = $(this).children(':selected').data('value');
-      settings.lineWidth = width;
+      lineWidth = $(this).children(':selected').data('value');
+      settings.lineWidth = lineWidth;
    });
 
    $("#colorpicker").change(function(){
@@ -123,6 +124,7 @@ document.addEventListener("DOMContentLoaded", function() {
         // alert("konec circle");
       }
        if(settings.mode == "rectangle"){
+         console.log('r');
          var rectWidth = Math.abs(currX - prevX);
          var rectHeight = Math.abs(currY - prevY);
          socket.emit('draw_rectangle', {x: prevX, y: prevY, width: rectWidth, height: rectHeight, settings: settings});
@@ -171,7 +173,7 @@ document.addEventListener("DOMContentLoaded", function() {
       image.src = data.data;
 
       context.drawImage(image, 0, 0);
-      document.getElementById("userName").innerHTML = socket.id;
+      // document.getElementById("userName").innerHTML = socket.id;
    });
    
 
@@ -188,10 +190,12 @@ document.addEventListener("DOMContentLoaded", function() {
    });
 
    socket.on('draw_rectangle', function (data){
+
       var x = data.x;
       var y = data.y;
       var width = data.width;
       var height = data.height;
+      
       context.beginPath();
       context.rect(x,y,width,height);
       context.strokeStyle = data.settings.color;
