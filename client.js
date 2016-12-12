@@ -65,6 +65,9 @@ document.addEventListener("DOMContentLoaded", function() {
    $("#line").click(function(){
       settings.mode = "line";
    });
+   $("#loading").click(function(){
+      $("#loading").slideUp(1000);
+   });
    $("#pencil").click(function(){
       settings.mode = "pencil";
    });
