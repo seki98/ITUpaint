@@ -52,6 +52,8 @@ document.addEventListener("DOMContentLoaded", function() {
       settings.mode = "line";
    if(e.which == 111)
       $("#colorpicker").trigger("click");
+   if(e.which == 115)
+      $("#save").trigger("click");
    if(e.which == 119)
       $("#selectWidth").trigger("click");
     // alert(e.which);
