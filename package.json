@@ -1,9 +1,12 @@
 {
-  "name": "socket-chat-example",
+  "name": "multiuser-paint",
   "version": "0.0.1",
-  "description": "my first socket.io app",
+  "repository": "https://github.com/seki98/ITUpaint.git",
+  "license": "UNLICENSED",
+  "description": "My first socket.io project",
   "dependencies": {
     "express": "^4.10.2",
+    "mongodb": "^2.2.19",
     "socket.io": "^1.5.0"
   }
 }

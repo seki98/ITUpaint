@@ -2,6 +2,8 @@ var express = require('express'),
     app = express(),
     http = require('http'),
     socketIo = require('socket.io');
+    
+    
 
 // start webserver on port 8080
 var server =  http.createServer(app);
@@ -34,9 +36,9 @@ io.on('connection', function (socket) {
   socket.on('disconnect', function(){
     console.log(clients);
     var index = clients.indexOf(socket.id);
-    var topItem = clients.pop();
+    var topUser = clients.pop();
     if(clients.length != index)
-      clients[index] = topItem;
+      clients[index] = index + " " + topUser;
     // console.log(clients);
   });
 
